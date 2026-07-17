@@ -54,11 +54,6 @@ git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 |-----------|-------------|
 | [powerline-footer](extensions/powerline-footer.ts) | Custom TUI footer with git status, model info, thinking level, and spinner |
 | [permission-gate](extensions/permission-gate.ts) | Prompts for confirmation before running dangerous bash commands (rm -rf, sudo, chmod 777) |
-| [macos-notify](extensions/macos-notify.ts) | Sends a native macOS notification when the agent finishes working |
-
-### macOS Notify
-
-The `macos-notify` extension uses `PiNotify.app` to deliver native notifications with the pi icon. The app is pre-built in `macos-notify-app/PiNotify.app`. If missing, the extension auto-builds from source (requires Xcode Command Line Tools).
 
 ## License
 
