@@ -1,0 +1,11 @@
+{
+  "name": "@gabriel-cervo/pi-skills",
+  "version": "1.0.0",
+  "description": "A collection of skills and extensions for pi-coding-agent",
+  "keywords": ["pi-package"],
+  "license": "MIT",
+  "pi": {
+    "skills": ["./skills"],
+    "extensions": ["./extensions"]
+  }
+}

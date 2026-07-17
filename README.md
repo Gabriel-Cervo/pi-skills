@@ -1,17 +1,19 @@
-# Pi Skills
+# Pi Skills & Extensions
 
-A collection of skills for [pi-coding-agent](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent), compatible with Claude Code, Codex CLI, Amp, and Droid.
+A collection of skills and extensions for [pi-coding-agent](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent). Skills are compatible with Claude Code, Codex CLI, Amp, and Droid.
 
 ## Installation
 
 ### pi-coding-agent
 
 ```bash
-# User-level (available in all projects)
-git clone https://github.com/Gabriel-Cervo/pi-skills ~/.pi/agent/skills/pi-skills
+# Install as a pi package (recommended)
+pi install git:github.com/Gabriel-Cervo/pi-skills
 
-# Or project-level
-git clone https://github.com/Gabriel-Cervo/pi-skills .pi/skills/pi-skills
+# Or clone manually and point pi at it
+git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
+# Then add to ~/.pi/agent/settings.json:
+# { "packages": ["~/pi-skills"] }
 ```
 
 ### Claude Code
@@ -22,28 +24,41 @@ Claude Code only looks one level deep for `SKILL.md` files, so symlink individua
 git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 
 mkdir -p ~/.claude/skills
-ln -s ~/pi-skills/good-writing ~/.claude/skills/good-writing
-ln -s ~/pi-skills/grilling ~/.claude/skills/grilling
-ln -s ~/pi-skills/grill-me ~/.claude/skills/grill-me
-ln -s ~/pi-skills/handoff ~/.claude/skills/handoff
-ln -s ~/pi-skills/writing-great-skills ~/.claude/skills/writing-great-skills
+ln -s ~/pi-skills/skills/good-writing ~/.claude/skills/good-writing
+ln -s ~/pi-skills/skills/grilling ~/.claude/skills/grilling
+ln -s ~/pi-skills/skills/grill-me ~/.claude/skills/grill-me
+ln -s ~/pi-skills/skills/handoff ~/.claude/skills/handoff
+ln -s ~/pi-skills/skills/writing-great-skills ~/.claude/skills/writing-great-skills
 ```
 
 ### Codex CLI
 
 ```bash
-git clone https://github.com/Gabriel-Cervo/pi-skills ~/.codex/skills/pi-skills
+git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
+# Skills are in ~/pi-skills/skills/ — add that directory to your Codex skills config
 ```
 
 ## Available Skills
 
 | Skill | Description |
 |-------|-------------|
-| [good-writing](good-writing/SKILL.md) | Write clear, human-sounding prose and cite sources with links |
-| [grilling](grilling/SKILL.md) | Relentlessly interview the user about a plan, decision, or idea |
-| [grill-me](grill-me/SKILL.md) | Wrapper that loads the grilling skill to run the session |
-| [handoff](handoff/SKILL.md) | Compact the current conversation into a handoff document for another agent |
-| [writing-great-skills](writing-great-skills/SKILL.md) | Reference for writing and editing skills well |
+| [good-writing](skills/good-writing/SKILL.md) | Write clear, human-sounding prose and cite sources with links |
+| [grilling](skills/grilling/SKILL.md) | Relentlessly interview the user about a plan, decision, or idea |
+| [grill-me](skills/grill-me/SKILL.md) | Wrapper that loads the grilling skill to run the session |
+| [handoff](skills/handoff/SKILL.md) | Compact the current conversation into a handoff document for another agent |
+| [writing-great-skills](skills/writing-great-skills/SKILL.md) | Reference for writing and editing skills well |
+
+## Available Extensions
+
+| Extension | Description |
+|-----------|-------------|
+| [powerline-footer](extensions/powerline-footer.ts) | Custom TUI footer with git status, model info, thinking level, and spinner |
+| [permission-gate](extensions/permission-gate.ts) | Prompts for confirmation before running dangerous bash commands (rm -rf, sudo, chmod 777) |
+| [macos-notify](extensions/macos-notify.ts) | Sends a native macOS notification when the agent finishes working |
+
+### macOS Notify
+
+The `macos-notify` extension uses `PiNotify.app` to deliver native notifications with the pi icon. The app is pre-built in `macos-notify-app/PiNotify.app`. If missing, the extension auto-builds from source (requires Xcode Command Line Tools).
 
 ## License
 
