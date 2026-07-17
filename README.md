@@ -8,10 +8,10 @@ A collection of skills for [pi-coding-agent](https://github.com/badlogic/pi-mono
 
 ```bash
 # User-level (available in all projects)
-git clone https://github.com/your-user/Pi-Skills ~/.pi/agent/skills/Pi-Skills
+git clone https://github.com/Gabriel-Cervo/pi-skills ~/.pi/agent/skills/pi-skills
 
 # Or project-level
-git clone https://github.com/your-user/Pi-Skills .pi/skills/Pi-Skills
+git clone https://github.com/Gabriel-Cervo/pi-skills .pi/skills/pi-skills
 ```
 
 ### Claude Code
@@ -19,20 +19,20 @@ git clone https://github.com/your-user/Pi-Skills .pi/skills/Pi-Skills
 Claude Code only looks one level deep for `SKILL.md` files, so symlink individual skills:
 
 ```bash
-git clone https://github.com/your-user/Pi-Skills ~/Pi-Skills
+git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 
 mkdir -p ~/.claude/skills
-ln -s ~/Pi-Skills/good-writing ~/.claude/skills/good-writing
-ln -s ~/Pi-Skills/grilling ~/.claude/skills/grilling
-ln -s ~/Pi-Skills/grill-me ~/.claude/skills/grill-me
-ln -s ~/Pi-Skills/handoff ~/.claude/skills/handoff
-ln -s ~/Pi-Skills/writing-great-skills ~/.claude/skills/writing-great-skills
+ln -s ~/pi-skills/good-writing ~/.claude/skills/good-writing
+ln -s ~/pi-skills/grilling ~/.claude/skills/grilling
+ln -s ~/pi-skills/grill-me ~/.claude/skills/grill-me
+ln -s ~/pi-skills/handoff ~/.claude/skills/handoff
+ln -s ~/pi-skills/writing-great-skills ~/.claude/skills/writing-great-skills
 ```
 
 ### Codex CLI
 
 ```bash
-git clone https://github.com/your-user/Pi-Skills ~/.codex/skills/Pi-Skills
+git clone https://github.com/Gabriel-Cervo/pi-skills ~/.codex/skills/pi-skills
 ```
 
 ## Available Skills
