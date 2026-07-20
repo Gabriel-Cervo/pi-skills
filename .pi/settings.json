@@ -1,0 +1,19 @@
+{
+  "lastChangelogVersion": "0.80.10",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-luna",
+  "defaultThinkingLevel": "high",
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "packages": [
+    "npm:pi-mcp-adapter",
+    "npm:pi-web-access",
+    "npm:@tintinweb/pi-subagents"
+  ],
+  "theme": "tokyonight-moon",
+  "compaction": {
+    "enabled": false
+  },
+  "editorPaddingX": 1
+}

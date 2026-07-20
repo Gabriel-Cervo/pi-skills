@@ -38,6 +38,10 @@ git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 # Skills are in ~/pi-skills/skills/ — add that directory to your Codex skills config
 ```
 
+### Project configuration
+
+The repository includes shared project settings in [.pi/settings.json](.pi/settings.json). Pi also discovers the project-local powerline extension and Tokyo Night Moon theme from [.pi](.pi).
+
 ## Available Skills
 
 | Skill | Description |
@@ -54,6 +58,13 @@ git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 |-----------|-------------|
 | [powerline-footer](extensions/powerline-footer.ts) | Custom TUI footer with git status, model info, thinking level, and spinner |
 | [permission-gate](extensions/permission-gate.ts) | Prompts for confirmation before running dangerous bash commands (rm -rf, sudo, chmod 777) |
+| [macos-notify](extensions/macos-notify.ts) | Sends a native macOS notification when the agent finishes working |
+
+## Themes
+
+| Theme | Description |
+|-------|-------------|
+| [tokyonight-moon](.pi/themes/tokyonight-moon.json) | Tokyo Night Moon color theme for the Pi TUI |
 
 ## License
 

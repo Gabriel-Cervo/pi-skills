@@ -1,1 +1,6 @@
 .DS_Store
+
+# Pi project runtime state
+.pi/git/
+.pi/npm/
+.pi/sessions/
