@@ -1,15 +1,15 @@
 {
   "lastChangelogVersion": "0.80.10",
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-luna",
-  "defaultThinkingLevel": "high",
+  "defaultModel": "gpt-5.6-sol",
+  "defaultThinkingLevel": "medium",
   "terminal": {
     "showTerminalProgress": true
   },
   "packages": [
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
-    "npm:@tintinweb/pi-subagents"
+    "git:github.com/Gabriel-Cervo/Pi-Subagents"
   ],
   "theme": "tokyonight-moon",
   "compaction": {
