@@ -355,7 +355,7 @@ export default function (pi: ExtensionAPI) {
 			{ placement: "aboveEditor" },
 		);
 
-		class PowerlineEditor extends CustomEditor {
+		class CustomFooterEditor extends CustomEditor {
 			constructor(tui: TUI, theme: EditorTheme, keybindings: KeybindingsManager) {
 				super(tui, theme, keybindings, { paddingX: 1 });
 				activeTui = tui;
@@ -397,7 +397,7 @@ export default function (pi: ExtensionAPI) {
 			}
 		}
 
-		ctx.ui.setEditorComponent((tui, theme, keybindings) => new PowerlineEditor(tui, theme, keybindings));
+		ctx.ui.setEditorComponent((tui, theme, keybindings) => new CustomFooterEditor(tui, theme, keybindings));
 		void refreshGit();
 	};
 
@@ -442,13 +442,13 @@ export default function (pi: ExtensionAPI) {
 		activeCtx = undefined;
 	});
 
-	pi.registerCommand("powerline-footer", {
-		description: "Toggle the image-inspired powerline editor footer",
+	pi.registerCommand("custom-footer", {
+		description: "Toggle the custom editor footer",
 		handler: async (_args, ctx) => {
 			enabled = !enabled;
 			if (enabled) install(ctx);
 			else uninstall(ctx);
-			ctx.ui.notify(`Powerline footer ${enabled ? "enabled" : "disabled"}`, "info");
+			ctx.ui.notify(`Custom footer ${enabled ? "enabled" : "disabled"}`, "info");
 		},
 	});
 }

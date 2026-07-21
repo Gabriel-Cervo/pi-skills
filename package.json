@@ -4,9 +4,16 @@
   "description": "A collection of skills and extensions for pi-coding-agent",
   "keywords": ["pi-package"],
   "license": "MIT",
+  "dependencies": {
+    "@gabriel-cervo/pi-subagents": "github:Gabriel-Cervo/Pi-Subagents"
+  },
+  "bundledDependencies": ["@gabriel-cervo/pi-subagents"],
   "pi": {
     "skills": ["./skills"],
-    "extensions": ["./extensions"],
+    "extensions": [
+      "./extensions",
+      "./node_modules/@gabriel-cervo/pi-subagents/src/index.ts"
+    ],
     "themes": ["./.pi/themes"]
   }
 }
