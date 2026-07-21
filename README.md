@@ -28,6 +28,7 @@ ln -s ~/pi-skills/skills/good-writing ~/.claude/skills/good-writing
 ln -s ~/pi-skills/skills/grilling ~/.claude/skills/grilling
 ln -s ~/pi-skills/skills/grill-me ~/.claude/skills/grill-me
 ln -s ~/pi-skills/skills/handoff ~/.claude/skills/handoff
+ln -s ~/pi-skills/skills/librarian ~/.claude/skills/librarian
 ln -s ~/pi-skills/skills/writing-great-skills ~/.claude/skills/writing-great-skills
 ```
 
@@ -52,6 +53,8 @@ Installing this repository as a Pi package also installs and loads [Pi-Subagents
 | [grilling](skills/grilling/SKILL.md) | Relentlessly interview the user about a plan, decision, or idea |
 | [grill-me](skills/grill-me/SKILL.md) | Wrapper that loads the grilling skill to run the session |
 | [handoff](skills/handoff/SKILL.md) | Compact the current conversation into a handoff document for another agent |
+| [herdr](skills/herdr/SKILL.md) | Control the Herdr terminal multiplexer for coding agents |
+| [librarian](skills/librarian/SKILL.md) | Research open-source libraries with evidence-backed answers and GitHub permalinks |
 | [writing-great-skills](skills/writing-great-skills/SKILL.md) | Reference for writing and editing skills well |
 
 ## Available Extensions

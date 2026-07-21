@@ -17,6 +17,16 @@ If the check fails, say that you are not running inside Herdr and stop. Do not i
 
 When the check passes, the `herdr` binary in `PATH` talks to the current session. Use it to inspect neighboring work, create terminal layout, start agents and commands, read output, and wait for state changes.
 
+## Install the Pi integration
+
+Herdr must recognize Pi as an agent kind before `--kind pi` works. Install the official Pi detection manifest once per machine:
+
+```bash
+herdr integration install pi
+```
+
+Run `herdr integration status` to confirm it is installed and up to date. Skip this step only when you already know Pi is registered; `herdr agent` lists every recognized kind.
+
 ## Learn the current CLI
 
 The installed binary is the authority for command syntax. Start with:
@@ -152,7 +162,7 @@ herdr agent send-keys reviewer esc
 herdr agent send-keys reviewer ctrl+c
 ```
 
-Herdr validates all keys before writing any bytes. Read the result through the resolved agent:
+Herdr validates all keys before writing any bytes. `esc` is the canonical spelling; `escape` is also accepted. Read the result through the resolved agent:
 
 ```bash
 herdr agent get reviewer
@@ -177,7 +187,7 @@ herdr pane wait-output <returned-pane-id> --match "test result" --timeout 120000
 herdr pane read <returned-pane-id> --source recent-unwrapped --lines 120
 ```
 
-`pane run` atomically sends command text and Enter. `pane wait-output` searches the selected snapshot immediately, so output that already exists can match. Use `--match <text>` for a literal substring or `--regex <pattern>` for a Rust regular expression. Omitting `--timeout` allows an indefinite wait.
+`pane run` atomically sends command text and Enter. Prefer it over `pane send-text` plus `pane send-keys Enter` because the separate operations are low-level and non-submitting. `pane wait-output` searches the selected snapshot immediately, so output that already exists can match. Use `--match <text>` for a literal substring or `--regex <pattern>` for a Rust regular expression. Omitting `--timeout` allows an indefinite wait.
 
 Use the read source that matches the task:
 
@@ -186,11 +196,21 @@ Use the read source that matches the task:
 - `recent-unwrapped`: recent output with soft wraps joined; prefer it for logs and transcripts.
 - `detection`: the plain-text bottom-buffer snapshot used for agent detection.
 
-Use `--format ansi` when colors and terminal styling are evidence. Otherwise use text.
+Use `--format ansi` (or the `--ansi` shorthand) when colors and terminal styling are evidence. Otherwise use text.
 
 `--lines` asks Herdr for more rows from the pane's available screen and host scrollback. If increasing it does not reveal more of a completed response, the pane is probably running the agent on the terminal's alternate screen. Rows that leave the alternate screen do not enter Herdr's host scrollback, so a larger line count cannot recover them.
 
 After that failed read, ask the agent to write its complete response as Markdown in a temporary directory and reply only with the file path, then read the file directly. Use this only as a fallback; do not request file output in the initial prompt.
+
+## Debug agent detection
+
+When an agent's lifecycle state is `unknown` or `agent start` fails to recognize a running agent, inspect the detection snapshot:
+
+```bash
+herdr agent explain <target>
+```
+
+`agent explain` classifies the same bottom-buffer snapshot used by live detection. Add `--verbose` for matched-rule evidence, manifest version, and override shadowing. Use `--file PATH --agent LABEL` to explain a saved fixture instead.
 
 ## Safety and coordination rules
 
