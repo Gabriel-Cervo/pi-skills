@@ -25,6 +25,7 @@ git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 
 mkdir -p ~/.claude/skills
 ln -s ~/pi-skills/skills/good-writing ~/.claude/skills/good-writing
+ln -s ~/pi-skills/skills/herdr ~/.claude/skills/herdr
 ln -s ~/pi-skills/skills/grilling ~/.claude/skills/grilling
 ln -s ~/pi-skills/skills/grill-me ~/.claude/skills/grill-me
 ln -s ~/pi-skills/skills/handoff ~/.claude/skills/handoff
@@ -43,7 +44,7 @@ git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 
 The repository includes shared project settings in [.pi/settings.json](.pi/settings.json). Pi also discovers the project-local custom footer and Tokyo Night Moon theme from [.pi](.pi).
 
-Installing this repository as a Pi package also installs and loads [Pi-Subagents](https://github.com/Gabriel-Cervo/Pi-Subagents) through its bundled package dependency; `.pi/settings.json` is only project-local configuration and is not relied on for package installation.
+Installing this repository as a Pi package also installs and loads [Herdr-Subagents](https://github.com/Gabriel-Cervo/Herdr-Subagents) through its bundled package dependency. `.pi/settings.json` is project-local configuration and is not required for package installation.
 
 ## Available Skills
 
@@ -64,7 +65,7 @@ Installing this repository as a Pi package also installs and loads [Pi-Subagents
 | [custom-footer](extensions/custom-footer.ts) | Custom TUI editor footer with git status, model info, thinking level, spinner, and petit-chat overlay |
 | [permission-gate](extensions/permission-gate.ts) | Prompts for confirmation before running dangerous bash commands (rm -rf, sudo, chmod 777) |
 | [macos-notify](extensions/macos-notify.ts) | Sends a native macOS notification when the agent finishes working |
-| [Pi-Subagents](https://github.com/Gabriel-Cervo/Pi-Subagents) | Native in-process subagents with configurable models, `/agents`, background execution, steering, and smart result joining |
+| [Herdr-Subagents](https://github.com/Gabriel-Cervo/Herdr-Subagents) | Herdr-backed subagents with configurable agents, `/agents`, background execution, steering, and smart result joining |
 
 ## Themes
 
