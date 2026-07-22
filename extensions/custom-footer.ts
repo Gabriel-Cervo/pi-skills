@@ -326,41 +326,55 @@ export default function (pi: ExtensionAPI) {
 					const thinking = pi.getThinkingLevel();
 					const directory = basename(ctx.cwd) || ctx.cwd;
 
-					const leftParts: string[] = [];
-
+					// Primary line: spinner + model + thinking (identity / config)
+					const primaryParts: string[] = [];
 					if (working) {
-						leftParts.push(theme.fg("accent", spinnerFrames[spinnerIndex]));
+						primaryParts.push(theme.fg("accent", spinnerFrames[spinnerIndex]));
 					}
-
-					leftParts.push(theme.fg("customMessageLabel", compactModelName(ctx)));
-					leftParts.push(theme.fg(
+					primaryParts.push(theme.fg("customMessageLabel", compactModelName(ctx)));
+					primaryParts.push(theme.fg(
 						thinking === "off" ? "thinkingOff" : `thinking${thinking[0]!.toUpperCase()}${thinking.slice(1)}` as "thinkingHigh",
 						`thinking: ${thinking}`
 					));
-					leftParts.push(theme.fg("accent", `📁 ${directory}`));
 
+					// Secondary line: directory + git (location / repo state)
+					const secondaryParts: string[] = [];
+					secondaryParts.push(theme.fg("accent", `📁 ${directory}`));
 					if (git.branch) {
 						let gitText = ` ${git.branch}`;
 						if (git.changed) gitText += ` *${git.changed}`;
 						if (git.untracked) gitText += ` ?${git.untracked}`;
-						leftParts.push(theme.fg("warning", gitText));
+						secondaryParts.push(theme.fg("warning", gitText));
 					}
 
-					const left = leftParts.join(theme.fg("dim", "  ·  "));
+					const joiner = theme.fg("dim", "  ·  ");
+					const primary = primaryParts.join(joiner);
+					const secondary = secondaryParts.join(joiner);
 					const right = theme.fg("muted", context);
-					const leftWidth = visibleWidth(left);
+
+					const primaryWidth = visibleWidth(primary);
+					const secondaryWidth = visibleWidth(secondary);
 					const rightWidth = visibleWidth(right);
 					const minGap = 2;
 
-					// Single line if everything fits with padding and gap
-					if (leftWidth + rightWidth + minGap <= inner) {
-						const spacer = " ".repeat(inner - leftWidth - rightWidth);
-						return [truncateToWidth(padLeft + left + spacer + right + padRight, width)];
+					// Single line: primary + secondary + right
+					if (primaryWidth + secondaryWidth + rightWidth + minGap * 2 <= inner) {
+						const spacer = " ".repeat(inner - primaryWidth - secondaryWidth - rightWidth);
+						return [truncateToWidth(padLeft + primary + "  " + secondary + spacer + right + padRight, width)];
 					}
 
-					// Two lines: left parts on line 1, context right-aligned on line 2
+					// Two lines: primary on line 1, secondary + right on line 2
+					if (secondaryWidth + rightWidth + minGap <= inner) {
+						return [
+							truncateToWidth(padLeft + primary + padRight, width),
+							truncateToWidth(padLeft + secondary + " ".repeat(inner - secondaryWidth - rightWidth) + right + padRight, width),
+						];
+					}
+
+					// Very narrow: primary alone on line 1, secondary alone on line 2, right alone on line 3
 					return [
-						truncateToWidth(padLeft + left + padRight, width),
+						truncateToWidth(padLeft + primary + padRight, width),
+						truncateToWidth(padLeft + secondary + padRight, width),
 						truncateToWidth(padLeft + " ".repeat(Math.max(0, inner - rightWidth)) + right + padRight, width),
 					];
 				},
