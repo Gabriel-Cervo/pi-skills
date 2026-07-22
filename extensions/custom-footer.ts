@@ -311,6 +311,13 @@ export default function (pi: ExtensionAPI) {
 				dispose() {},
 				invalidate() {},
 				render(width: number): string[] {
+					const PAD = 1;
+					const inner = width - PAD * 2;
+					if (inner <= 0) return [];
+
+					const padLeft = " ".repeat(PAD);
+					const padRight = " ".repeat(PAD);
+
 					const theme = ctx.ui.theme;
 					const usage = ctx.getContextUsage();
 					const contextWindow = usage?.contextWindow ?? ctx.model?.contextWindow;
@@ -343,17 +350,18 @@ export default function (pi: ExtensionAPI) {
 					const right = theme.fg("muted", context);
 					const leftWidth = visibleWidth(left);
 					const rightWidth = visibleWidth(right);
+					const minGap = 2;
 
-					// Single line if it fits
-					if (leftWidth + rightWidth + 2 <= width) {
-						const pad = " ".repeat(Math.max(1, width - leftWidth - rightWidth));
-						return [truncateToWidth(left + pad + right, width)];
+					// Single line if everything fits with padding and gap
+					if (leftWidth + rightWidth + minGap <= inner) {
+						const spacer = " ".repeat(inner - leftWidth - rightWidth);
+						return [truncateToWidth(padLeft + left + spacer + right + padRight, width)];
 					}
 
-					// Wrap to two lines on narrow terminals
+					// Two lines: left parts on line 1, context right-aligned on line 2
 					return [
-						truncateToWidth(left, width),
-						truncateToWidth(" ".repeat(Math.max(0, width - rightWidth)) + right, width),
+						truncateToWidth(padLeft + left + padRight, width),
+						truncateToWidth(padLeft + " ".repeat(Math.max(0, inner - rightWidth)) + right + padRight, width),
 					];
 				},
 			};
