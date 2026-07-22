@@ -1,9 +1,7 @@
 import { basename } from "node:path";
 import {
-	CustomEditor,
 	type ExtensionAPI,
 	type ExtensionContext,
-	type KeybindingsManager,
 	type Theme,
 } from "@earendil-works/pi-coding-agent";
 import {
@@ -11,7 +9,6 @@ import {
 	truncateToWidth,
 	visibleWidth,
 	type Component,
-	type EditorTheme,
 	type OverlayHandle,
 	type OverlayOptions,
 	type TUI,
@@ -21,14 +18,6 @@ interface GitState {
 	branch?: string;
 	changed: number;
 	untracked: number;
-}
-
-class EmptyFooter implements Component {
-	render(): string[] {
-		return [];
-	}
-
-	invalidate(): void {}
 }
 
 // ── petit chat ───────────────────────────────────────────────────────────────
@@ -235,21 +224,6 @@ function compactModelName(ctx: ExtensionContext): string {
 	return name || ctx.model.id;
 }
 
-function providerGlyph(provider?: string): string {
-	switch (provider) {
-		case "anthropic":
-			return "✿";
-		case "openai":
-		case "openai-codex":
-			return "◆";
-		case "google":
-		case "google-gemini-cli":
-			return "✦";
-		default:
-			return "●";
-	}
-}
-
 function parseGitStatus(output: string): GitState {
 	const lines = output.split("\n").filter(Boolean);
 	const header = lines[0]?.startsWith("## ") ? lines.shift()!.slice(3) : "";
@@ -263,30 +237,6 @@ function parseGitStatus(output: string): GitState {
 		else if (!line.startsWith("!!")) changed++;
 	}
 	return { branch, changed, untracked };
-}
-
-function fitTopBorder(
-	segments: string[],
-	width: number,
-	border: (text: string) => string,
-): string {
-	if (width <= 0) return "";
-	if (width === 1) return border("─");
-
-	const prefix = border("──");
-	const suffix = border("─");
-	const kept = [...segments];
-	const joiner = border(" ❯ ");
-	const contentWidth = () => visibleWidth(kept.join(joiner));
-
-	while (kept.length > 1 && visibleWidth(prefix) + contentWidth() + visibleWidth(suffix) + 1 > width) {
-		kept.pop();
-	}
-
-	const available = Math.max(0, width - visibleWidth(prefix) - visibleWidth(suffix));
-	const content = truncateToWidth(kept.join(joiner), available, "");
-	const fill = "─".repeat(Math.max(0, width - visibleWidth(prefix) - visibleWidth(content) - visibleWidth(suffix)));
-	return truncateToWidth(prefix + content + border(fill) + suffix, width, "");
 }
 
 export default function (pi: ExtensionAPI) {
@@ -342,7 +292,6 @@ export default function (pi: ExtensionAPI) {
 		if (ctx.mode !== "tui") return;
 		activeCtx = ctx;
 		ctx.ui.setWorkingVisible(false);
-		ctx.ui.setFooter(() => new EmptyFooter());
 
 		// Install petit chat overlay using the same widget key so the standalone
 		// extension stays compatible (no double-install if both are loaded).
@@ -355,54 +304,65 @@ export default function (pi: ExtensionAPI) {
 			{ placement: "aboveEditor" },
 		);
 
-		class CustomFooterEditor extends CustomEditor {
-			constructor(tui: TUI, theme: EditorTheme, keybindings: KeybindingsManager) {
-				super(tui, theme, keybindings, { paddingX: 1 });
-				activeTui = tui;
-			}
+		ctx.ui.setFooter((tui, theme) => {
+			activeTui = tui;
 
-			render(width: number): string[] {
-				const lines = super.render(width);
-				if (lines.length === 0) return lines;
+			return {
+				dispose() {},
+				invalidate() {},
+				render(width: number): string[] {
+					const theme = ctx.ui.theme;
+					const usage = ctx.getContextUsage();
+					const contextWindow = usage?.contextWindow ?? ctx.model?.contextWindow;
+					const percent = usage?.percent == null ? "0.0" : usage.percent.toFixed(1);
+					const context = contextWindow ? `${percent}% / ${Math.round(contextWindow / 1000)}k` : `${percent}%`;
+					const thinking = pi.getThinkingLevel();
+					const directory = basename(ctx.cwd) || ctx.cwd;
 
-				const theme = ctx.ui.theme;
-				const usage = ctx.getContextUsage();
-				const contextWindow = usage?.contextWindow ?? ctx.model?.contextWindow;
-				const percent = usage?.percent == null ? "0.0" : usage.percent.toFixed(1);
-				const context = contextWindow ? `${percent}%/${Math.round(contextWindow / 1000)}k` : `${percent}%`;
-				const thinking = pi.getThinkingLevel();
-				const directory = basename(ctx.cwd) || ctx.cwd;
+					const leftParts: string[] = [];
 
-				const segments: string[] = [];
+					if (working) {
+						leftParts.push(theme.fg("accent", spinnerFrames[spinnerIndex]));
+					}
 
-				if (working) segments.push(theme.fg("accent", ` ${spinnerFrames[spinnerIndex]} `));
+					leftParts.push(theme.fg("customMessageLabel", compactModelName(ctx)));
+					leftParts.push(theme.fg(
+						thinking === "off" ? "thinkingOff" : `thinking${thinking[0]!.toUpperCase()}${thinking.slice(1)}` as "thinkingHigh",
+						`thinking: ${thinking}`
+					));
+					leftParts.push(theme.fg("accent", `📁 ${directory}`));
 
-				segments.push(theme.fg("customMessageLabel", ` ${compactModelName(ctx)} `));
-				segments.push(theme.fg(thinking === "off" ? "thinkingOff" : `thinking${thinking[0]!.toUpperCase()}${thinking.slice(1)}` as "thinkingHigh", ` thinking:${thinking} `));
-				segments.push(theme.fg("accent", ` 📁 ${directory} `));
+					if (git.branch) {
+						let gitText = ` ${git.branch}`;
+						if (git.changed) gitText += ` *${git.changed}`;
+						if (git.untracked) gitText += ` ?${git.untracked}`;
+						leftParts.push(theme.fg("warning", gitText));
+					}
 
-				if (git.branch) {
-					let gitText = `  ${git.branch}`;
-					if (git.changed) gitText += ` *${git.changed}`;
-					if (git.untracked) gitText += ` ?${git.untracked}`;
-					segments.push(theme.fg("warning", ` ${gitText} `));
-				}
+					const left = leftParts.join(theme.fg("dim", "  ·  "));
+					const right = theme.fg("muted", context);
+					const leftWidth = visibleWidth(left);
+					const rightWidth = visibleWidth(right);
 
-				segments.push(theme.fg("muted", ` ◧ ${context} `));
+					// Single line if it fits
+					if (leftWidth + rightWidth + 2 <= width) {
+						const pad = " ".repeat(Math.max(1, width - leftWidth - rightWidth));
+						return [truncateToWidth(left + pad + right, width)];
+					}
 
-				const topBorder = fitTopBorder(segments, width, (text) => this.borderColor(text));
+					// Wrap to two lines on narrow terminals
+					return [
+						truncateToWidth(left, width),
+						truncateToWidth(" ".repeat(Math.max(0, width - rightWidth)) + right, width),
+					];
+				},
+			};
+		});
 
-				lines[0] = topBorder;
-				return lines;
-			}
-		}
-
-		ctx.ui.setEditorComponent((tui, theme, keybindings) => new CustomFooterEditor(tui, theme, keybindings));
 		void refreshGit();
 	};
 
 	const uninstall = (ctx: ExtensionContext) => {
-		ctx.ui.setEditorComponent(undefined);
 		ctx.ui.setFooter(undefined);
 		ctx.ui.setWidget("petit-chat-overlay-host", undefined);
 		ctx.ui.setWorkingVisible(true);
