@@ -5,14 +5,14 @@
   "keywords": ["pi-package"],
   "license": "MIT",
   "dependencies": {
-    "@gabriel-cervo/herdr-subagents": "github:Gabriel-Cervo/Herdr-Subagents"
+    "@tintinweb/pi-subagents": "github:tintinweb/pi-subagents"
   },
-  "bundledDependencies": ["@gabriel-cervo/herdr-subagents"],
+  "bundledDependencies": ["@tintinweb/pi-subagents"],
   "pi": {
     "skills": ["./skills"],
     "extensions": [
       "./extensions",
-      "./node_modules/@gabriel-cervo/herdr-subagents/src/index.ts"
+      "./node_modules/@tintinweb/pi-subagents/src/index.ts"
     ],
     "themes": ["./.pi/themes"]
   }

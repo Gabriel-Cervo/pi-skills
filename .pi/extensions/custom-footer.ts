@@ -304,73 +304,79 @@ export default function (pi: ExtensionAPI) {
 			{ placement: "aboveEditor" },
 		);
 
-		ctx.ui.setFooter((tui, theme) => {
-			activeTui = tui;
+		// Status bar is rendered above the editor (top of screen) instead of
+		// in the default bottom footer.
+		ctx.ui.setWidget(
+			"status-bar",
+			(tui, theme) => {
+				activeTui = tui;
 
-			return {
-				dispose() {},
-				invalidate() {},
-				render(width: number): string[] {
-					const PAD = 1;
-					const inner = width - PAD * 2;
-					if (inner <= 0) return [];
+				return {
+					dispose() {},
+					invalidate() {},
+					render(width: number): string[] {
+						const PAD = 1;
+						const inner = width - PAD * 2;
+						if (inner <= 0) return [];
 
-					const padLeft = " ".repeat(PAD);
-					const padRight = " ".repeat(PAD);
+						const padLeft = " ".repeat(PAD);
+						const padRight = " ".repeat(PAD);
 
-					const theme = ctx.ui.theme;
-					const usage = ctx.getContextUsage();
-					const contextWindow = usage?.contextWindow ?? ctx.model?.contextWindow;
-					const percent = usage?.percent == null ? "0.0" : usage.percent.toFixed(1);
-					const context = contextWindow ? `${percent}% / ${Math.round(contextWindow / 1000)}k` : `${percent}%`;
-					const thinking = pi.getThinkingLevel();
-					const directory = basename(ctx.cwd) || ctx.cwd;
+						const theme = ctx.ui.theme;
+						const usage = ctx.getContextUsage();
+						const contextWindow = usage?.contextWindow ?? ctx.model?.contextWindow;
+						const percent = usage?.percent == null ? "0.0" : usage.percent.toFixed(1);
+						const context = contextWindow ? `${percent}% / ${Math.round(contextWindow / 1000)}k` : `${percent}%`;
+						const thinking = pi.getThinkingLevel();
+						const directory = basename(ctx.cwd) || ctx.cwd;
 
-					const leftParts: string[] = [];
+						const leftParts: string[] = [];
 
-					if (working) {
-						leftParts.push(theme.fg("accent", spinnerFrames[spinnerIndex]));
-					}
+						if (working) {
+							leftParts.push(theme.fg("accent", spinnerFrames[spinnerIndex]));
+						}
 
-					leftParts.push(theme.fg("customMessageLabel", compactModelName(ctx)));
-					leftParts.push(theme.fg(
-						thinking === "off" ? "thinkingOff" : `thinking${thinking[0]!.toUpperCase()}${thinking.slice(1)}` as "thinkingHigh",
-						`thinking: ${thinking}`
-					));
-					leftParts.push(theme.fg("accent", `📁 ${directory}`));
+						leftParts.push(theme.fg("customMessageLabel", compactModelName(ctx)));
+						leftParts.push(theme.fg(
+							thinking === "off" ? "thinkingOff" : `thinking${thinking[0]!.toUpperCase()}${thinking.slice(1)}` as "thinkingHigh",
+							`thinking: ${thinking}`
+						));
+						leftParts.push(theme.fg("dim", `~/${directory}`));
 
-					if (git.branch) {
-						let gitText = ` ${git.branch}`;
-						if (git.changed) gitText += ` *${git.changed}`;
-						if (git.untracked) gitText += ` ?${git.untracked}`;
-						leftParts.push(theme.fg("warning", gitText));
-					}
+						if (git.branch) {
+							let gitText = ` ${git.branch}`;
+							if (git.changed) gitText += ` *${git.changed}`;
+							if (git.untracked) gitText += ` ?${git.untracked}`;
+							leftParts.push(theme.fg("warning", gitText));
+						}
 
-					const left = leftParts.join(theme.fg("dim", "  ·  "));
-					const right = theme.fg("muted", context);
-					const leftWidth = visibleWidth(left);
-					const rightWidth = visibleWidth(right);
+						const left = leftParts.join(theme.fg("dim", "  ·  "));
+						const right = theme.fg("muted", context);
+						const leftWidth = visibleWidth(left);
+						const rightWidth = visibleWidth(right);
 
-					// Single line if it fits
-					if (leftWidth + rightWidth + 2 <= inner) {
-						const spacer = " ".repeat(inner - leftWidth - rightWidth);
-						return [truncateToWidth(padLeft + left + spacer + right + padRight, width)];
-					}
+						// Single line if it fits
+						if (leftWidth + rightWidth + 2 <= inner) {
+							const spacer = " ".repeat(inner - leftWidth - rightWidth);
+							return [truncateToWidth(padLeft + left + spacer + right + padRight, width)];
+						}
 
-					// Wrap to two lines: left on line 1, context right-aligned on line 2
-					return [
-						truncateToWidth(padLeft + left + padRight, width),
-						truncateToWidth(padLeft + " ".repeat(Math.max(0, inner - rightWidth)) + right + padRight, width),
-					];
-				},
-			};
-		});
+						// Wrap to two lines: left on line 1, context right-aligned on line 2
+						return [
+							truncateToWidth(padLeft + left + padRight, width),
+							truncateToWidth(padLeft + " ".repeat(Math.max(0, inner - rightWidth)) + right + padRight, width),
+						];
+					},
+				};
+			},
+			{ placement: "aboveEditor" },
+		);
 
 		void refreshGit();
 	};
 
 	const uninstall = (ctx: ExtensionContext) => {
-		ctx.ui.setFooter(undefined);
+		ctx.ui.setWidget("status-bar", undefined);
 		ctx.ui.setWidget("petit-chat-overlay-host", undefined);
 		ctx.ui.setWorkingVisible(true);
 		petitChatHost?.dispose();

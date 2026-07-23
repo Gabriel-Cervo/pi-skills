@@ -25,7 +25,6 @@ git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 
 mkdir -p ~/.claude/skills
 ln -s ~/pi-skills/skills/good-writing ~/.claude/skills/good-writing
-ln -s ~/pi-skills/skills/herdr ~/.claude/skills/herdr
 ln -s ~/pi-skills/skills/grilling ~/.claude/skills/grilling
 ln -s ~/pi-skills/skills/grill-me ~/.claude/skills/grill-me
 ln -s ~/pi-skills/skills/handoff ~/.claude/skills/handoff
@@ -44,7 +43,7 @@ git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 
 The repository includes shared project settings in [.pi/settings.json](.pi/settings.json). Pi also discovers the project-local custom footer and Tokyo Night Moon theme from [.pi](.pi).
 
-Installing this repository as a Pi package also installs and loads [Herdr-Subagents](https://github.com/Gabriel-Cervo/Herdr-Subagents) through its bundled package dependency. `.pi/settings.json` is project-local configuration and is not required for package installation.
+Installing this repository as a Pi package also installs and loads [@tintinweb/pi-subagents](https://github.com/tintinweb/pi-subagents) through its bundled package dependency. `.pi/settings.json` is project-local configuration and is not required for package installation.
 
 ## Available Skills
 
@@ -54,7 +53,6 @@ Installing this repository as a Pi package also installs and loads [Herdr-Subage
 | [grilling](skills/grilling/SKILL.md) | Relentlessly interview the user about a plan, decision, or idea |
 | [grill-me](skills/grill-me/SKILL.md) | Wrapper that loads the grilling skill to run the session |
 | [handoff](skills/handoff/SKILL.md) | Compact the current conversation into a handoff document for another agent |
-| [herdr](skills/herdr/SKILL.md) | Control the Herdr terminal multiplexer for coding agents |
 | [librarian](skills/librarian/SKILL.md) | Research open-source libraries with evidence-backed answers and GitHub permalinks |
 | [writing-great-skills](skills/writing-great-skills/SKILL.md) | Reference for writing and editing skills well |
 
@@ -62,10 +60,9 @@ Installing this repository as a Pi package also installs and loads [Herdr-Subage
 
 | Extension | Description |
 |-----------|-------------|
-| [custom-footer](extensions/custom-footer.ts) | Custom TUI editor footer with git status, model info, thinking level, spinner, and petit-chat overlay |
+| [custom-footer](extensions/custom-footer.ts) | Custom TUI editor status bar (rendered above the editor) with git status, model info, thinking level, spinner, and petit-chat overlay |
 | [permission-gate](extensions/permission-gate.ts) | Prompts for confirmation before running dangerous bash commands (rm -rf, sudo, chmod 777) |
-| [macos-notify](extensions/macos-notify.ts) | Sends a native macOS notification when the agent finishes working |
-| [Herdr-Subagents](https://github.com/Gabriel-Cervo/Herdr-Subagents) | Herdr-backed subagents with configurable agents, `/agents`, background execution, steering, and smart result joining |
+| [pi-subagents](https://github.com/tintinweb/pi-subagents) | Claude Code-style autonomous sub-agents with `Agent` tool, `/agents`, background execution, steering, scheduling, and live widget UI |
 
 ## Themes
 
