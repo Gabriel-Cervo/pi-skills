@@ -41,7 +41,7 @@ git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 
 ### Project configuration
 
-The repository includes shared project settings in [.pi/settings.json](.pi/settings.json). Pi also discovers the project-local custom footer and Tokyo Night Moon theme from [.pi](.pi).
+The repository includes shared project settings in [.pi/settings.json](.pi/settings.json). Pi also discovers the Tokyo Night Moon theme from [.pi](.pi).
 
 Installing this repository as a Pi package also installs and loads [@tintinweb/pi-subagents](https://github.com/tintinweb/pi-subagents) through its bundled package dependency. `.pi/settings.json` is project-local configuration and is not required for package installation.
 
@@ -60,7 +60,6 @@ Installing this repository as a Pi package also installs and loads [@tintinweb/p
 
 | Extension | Description |
 |-----------|-------------|
-| [custom-footer](extensions/custom-footer.ts) | Custom TUI editor status bar (rendered above the editor) with git status, model info, thinking level, spinner, and petit-chat overlay |
 | [permission-gate](extensions/permission-gate.ts) | Prompts for confirmation before running dangerous bash commands (rm -rf, sudo, chmod 777) |
 | [pi-subagents](https://github.com/tintinweb/pi-subagents) | Claude Code-style autonomous sub-agents with `Agent` tool, `/agents`, background execution, steering, scheduling, and live widget UI |
 
