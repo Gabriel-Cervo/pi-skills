@@ -9,7 +9,7 @@
   "packages": [
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
-    "npm:@tintinweb/pi-subagents"
+    "git:github.com/Gabriel-Cervo/Pi-Herdr-Subagents"
   ],
   "theme": "tokyonight-moon",
   "compaction": {

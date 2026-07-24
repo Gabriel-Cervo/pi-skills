@@ -28,6 +28,7 @@ ln -s ~/pi-skills/skills/good-writing ~/.claude/skills/good-writing
 ln -s ~/pi-skills/skills/grilling ~/.claude/skills/grilling
 ln -s ~/pi-skills/skills/grill-me ~/.claude/skills/grill-me
 ln -s ~/pi-skills/skills/handoff ~/.claude/skills/handoff
+ln -s ~/pi-skills/skills/herdr ~/.claude/skills/herdr
 ln -s ~/pi-skills/skills/librarian ~/.claude/skills/librarian
 ln -s ~/pi-skills/skills/writing-great-skills ~/.claude/skills/writing-great-skills
 ```
@@ -43,7 +44,18 @@ git clone https://github.com/Gabriel-Cervo/pi-skills ~/pi-skills
 
 The repository includes shared project settings in [.pi/settings.json](.pi/settings.json). Pi also discovers the Tokyo Night Moon theme from [.pi](.pi).
 
-Installing this repository as a Pi package also installs and loads [@tintinweb/pi-subagents](https://github.com/tintinweb/pi-subagents) through its bundled package dependency. `.pi/settings.json` is project-local configuration and is not required for package installation.
+Installing this repository as a Pi package also installs and loads [Pi-Herdr-Subagents](https://github.com/Gabriel-Cervo/Pi-Herdr-Subagents) through its bundled package dependency. The bundled package provides the `Agent`, `get_subagent_result`, and `steer_subagent` tools, the `/agents` manager, and its Herdr skill. `.pi/settings.json` is project-local configuration and is not required for package installation.
+
+Pi-Herdr-Subagents supports interactive Herdr panes plus headless Pi and Claude foreground/background execution. Write-capable runs receive dedicated Git worktrees. Interactive sibling panes use compact two-pane column packing, and live runs appear in Pi's footer with `Ctrl+Shift+A` quick management.
+
+Pane execution requires [Herdr](https://herdr.dev) and its Pi integration:
+
+```bash
+herdr integration install pi
+herdr integration status
+```
+
+Headless definitions do not open Herdr panes. See the [Pi-Herdr-Subagents README](https://github.com/Gabriel-Cervo/Pi-Herdr-Subagents#readme) for agent creation, model and harness editing, automatic tests, worktree handoff, and safety details.
 
 ## Available Skills
 
@@ -55,13 +67,14 @@ Installing this repository as a Pi package also installs and loads [@tintinweb/p
 | [handoff](skills/handoff/SKILL.md) | Compact the current conversation into a handoff document for another agent |
 | [librarian](skills/librarian/SKILL.md) | Research open-source libraries with evidence-backed answers and GitHub permalinks |
 | [writing-great-skills](skills/writing-great-skills/SKILL.md) | Reference for writing and editing skills well |
+| [herdr](skills/herdr/SKILL.md) | Safely inspect and control Herdr panes, agents, workspaces, and worktrees |
 
 ## Available Extensions
 
 | Extension | Description |
 |-----------|-------------|
 | [permission-gate](extensions/permission-gate.ts) | Prompts for confirmation before running dangerous bash commands (rm -rf, sudo, chmod 777) |
-| [pi-subagents](https://github.com/tintinweb/pi-subagents) | Claude Code-style autonomous sub-agents with `Agent` tool, `/agents`, background execution, steering, scheduling, and live widget UI |
+| [Pi-Herdr-Subagents](https://github.com/Gabriel-Cervo/Pi-Herdr-Subagents) | Pi and Claude subagents with interactive or headless execution, isolated Git worktrees, compact pane packing, smart background joins, agent creation/edit/testing, and live footer management |
 
 ## Themes
 
